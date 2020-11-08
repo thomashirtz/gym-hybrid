@@ -10,36 +10,69 @@ Repository containing a collection of environment for reinforcement learning tas
 with side length 2 and the target area is a circle with radius 0.1. There is three discrete actions: turn, accelerate, and break; as well as 2 possible parameters: acceleration and rotation. The state is constituted of a list of 10 elements, including the speed, the position, the direction, the position of the target, etc.  
 The reward is the distance of the agent from the target of the last step minus the current distance. It is possible to add a penalty to the reward to incentivize the learning algorithm to score as quickly as possible. When the Agent is stopped in the target area, it receives a reward of one. If the agent leaves the area or takes too long (maximum step set at 200), the reward is set at minus one and the episode terminates.
 
-### Utilization
-
-Snippet of code to run the environment:
+### Basics
+Make and initialize an environment:
 ```
 import gym
 import gym_parametrized
-
 env = gym.make('Moving-v0')
 env.reset()
+```
 
+Get the action space and the observation space:
+```
+ACTION_SPACE = env.action_space[0].n
+PARAMETERS_SPACE = env.action_space[1].shape[0]
+OBSERVATION_SPACE = env.observation_space.shape[0]
+```
+
+Run a random agent:
+```
 done = False
 while not done:
     state, reward, done, info = env.step(env.action_space.sample())
     print(f'State: {state} Reward: {reward} Done: {done}')
 ```
 
+
 ### Action
 
-The action is structured as follow: 
-```
-action = (action_id, [value_rotation, value_acceleration])
-```
 The action ids are: 
 1. Turn
 2. Accelerate
 3. Break
 
-example of a valid action:
+The parameters are:
+1. Acceleration value
+2. Rotation value
+
+There is two distinct way to generate an action:
+
+Action with all the parameters (convenient if the model output all the parameters): 
 ```
+action = (action_id, [value_rotation, value_acceleration])
+```
+Example of a valid action:
+```
+action = (0, [0.1, 0.4])
 action = (1, [0.0, 0.2])
+action = (2, [0.1, 0.3])
+```
+
+Action with only the parameter related to the action id (convenient for algorithms that output only the parameter
+of the chosen action, since it doesn't require to pad the action): 
+```
+action = (0, [value_rotation])
+or
+action = (1, [value_acceleration])
+or
+action = (2, [])
+```
+Example of valid actions:
+```
+action = (0, [0.1])
+action = (1, [0.2])
+action = (2, [])
 ```
 
 ### Requirements
