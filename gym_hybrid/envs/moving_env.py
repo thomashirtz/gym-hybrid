@@ -90,7 +90,7 @@ class MovingEnv(gym.Env):
         return self.get_state()
 
     def step(self, raw_action: Tuple[int, list]) -> Tuple[list, float, bool, dict]:
-        action = Action(*raw_action)
+        action = Action(*raw_action)  # TODO avoid action padding
         last_distance = self.distance
         self.current_step += 1
 
