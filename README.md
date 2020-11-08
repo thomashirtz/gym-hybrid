@@ -1,6 +1,6 @@
-# gym-parameterized
+# gym-hybrid
 
-Repository containing a collection of environment for reinforcement learning task possessing parameterized action space.
+Repository containing a collection of environment for reinforcement learning task possessing discrete-continuous hybrid action space.
 
 ## "Moving-v0" 
 
