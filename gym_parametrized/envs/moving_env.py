@@ -1,8 +1,11 @@
+import numpy as np
+from typing import Tuple
+from collections import namedtuple
+
+import gym
 from gym import spaces
 from gym.utils import seeding
-from collections import namedtuple
-from typing import Tuple
-import numpy as np
+gym.logger.set_level(40)
 
 Action = namedtuple('Action', ['id', 'parameters'])
 Target = namedtuple('Target', ['x', 'y', 'radius'])
@@ -14,37 +17,39 @@ BREAK = 2
 
 
 class Agent:
-    def __init__(self):
+    def __init__(self, break_value: float = 0.1):
         self.x = None
         self.y = None
         self.theta = None
         self.speed = None
+        self.break_value = break_value
 
-    def accelerate(self, value):
+    def accelerate(self, value: float) -> None:
         self.speed += value
 
-    def break_(self):
-        self.speed = 0 if self.speed < 0.1 else self.speed - 0.1
+    def break_(self) -> None:
+        self.speed = 0 if self.speed < self.break_value else self.speed - self.break_value
 
-    def turn(self, value):
+    def turn(self, value: float) -> None:
         self.theta = (self.theta + value) % (2 * np.pi)
 
-    def step(self, delta_t=1.0):
+    def step(self, delta_t: float = 0.1) -> None:
         self.x += delta_t * self.speed * np.cos(self.theta)
         self.y += delta_t * self.speed * np.sin(self.theta)
 
-    def reset(self, x, y, direction):
+    def reset(self, x: float, y: float, direction: float) -> None:
         self.x = x
         self.y = y
         self.speed = 0
         self.theta = direction
 
 
-class MovingEnv:
+class MovingEnv(gym.Env):
     def __init__(self, seed=None):
         # Agent Parameters
         self.max_turn = 1.0
         self.max_acceleration = 0.5
+        self.break_value = 0.1
 
         # Environment Parameters
         self.delta_t = 0.1
@@ -56,7 +61,7 @@ class MovingEnv:
         # Initialization
         self.current_step = None
         self.target = None
-        self.agent = Agent()
+        self.agent = Agent(self.break_value)
         self.seed(seed)
 
         parameters_min = np.array([-self.max_turn, 0])
@@ -71,16 +76,20 @@ class MovingEnv:
         return [seed]
 
     def reset(self) -> list:
+        self.current_step = 0
+
         limit = self.field_size-self.target_radius
         low = [-limit, -limit, self.target_radius]
         high = [limit, limit, self.target_radius]
         self.target = Target(*self.np_random.uniform(low, high))
+
         low = [-self.field_size, -self.field_size, 0]
         high = [self.field_size, self.field_size, 2 * np.pi]
         self.agent.reset(*self.np_random.uniform(low, high))
+
         return self.get_state()
 
-    def step(self, raw_action: Tuple[int, list]):
+    def step(self, raw_action: Tuple[int, list]) -> Tuple[list, float, bool, dict]:
         action = Action(*raw_action)
         last_distance = self.distance
         self.current_step += 1
@@ -123,13 +132,13 @@ class MovingEnv:
         ]
         return state
 
-    def get_reward(self, last_distance, goal=False) -> float:
+    def get_reward(self, last_distance: float, goal: bool = False) -> float:
         return self.distance - last_distance - self.penalty + (1 if goal else 0)
 
     @property
-    def distance(self):
+    def distance(self) -> float:
         return self.get_distance(self.agent.x, self.agent.y, self.target.x, self.target.y)
 
     @staticmethod
-    def get_distance(x1, y1, x2, y2):
+    def get_distance(x1: float, y1: float, x2: float, y2: float) -> float:
         return np.sqrt(((x1 - x2) ** 2) + ((y1 - y2) ** 2))
