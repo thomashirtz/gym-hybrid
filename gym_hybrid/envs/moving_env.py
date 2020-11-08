@@ -7,7 +7,6 @@ from gym import spaces
 from gym.utils import seeding
 gym.logger.set_level(40)
 
-Action = namedtuple('Action', ['id', 'parameters'])
 Target = namedtuple('Target', ['x', 'y', 'radius'])
 
 # Action Id
@@ -42,6 +41,19 @@ class Agent:
         self.y = y
         self.speed = 0
         self.theta = direction
+
+
+class Action:
+    def __init__(self, id_: int, parameters: list):
+        self.id = id_
+        self.parameters = parameters
+
+    @property
+    def parameter(self) -> float:
+        if len(self.parameters) == 2:
+            return self.parameters[self.id]
+        else:
+            return self.parameters[0]
 
 
 class MovingEnv(gym.Env):
@@ -90,15 +102,15 @@ class MovingEnv(gym.Env):
         return self.get_state()
 
     def step(self, raw_action: Tuple[int, list]) -> Tuple[list, float, bool, dict]:
-        action = Action(*raw_action)  # TODO avoid action padding
+        action = Action(*raw_action)
         last_distance = self.distance
         self.current_step += 1
 
         if action.id == TURN:
-            rotation = max(min(action.parameters[TURN], self.max_turn), -self.max_turn)
+            rotation = max(min(action.parameter, self.max_turn), -self.max_turn)
             self.agent.turn(rotation)
         elif action.id == ACCELERATE:
-            acceleration = max(min(action.parameters[ACCELERATE], self.max_acceleration), 0)
+            acceleration = max(min(action.parameter, self.max_acceleration), 0)
             self.agent.accelerate(acceleration)
         elif action.id == BREAK:
             self.agent.break_()
