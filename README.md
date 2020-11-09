@@ -46,13 +46,13 @@ The parameters are:
 1. Acceleration value
 2. Rotation value
 
-There is two distinct way to generate an action:
+**There is two distinct way to generate an action:**
 
 Action with all the parameters (convenient if the model output all the parameters): 
 ```
 action = (action_id, [value_rotation, value_acceleration])
 ```
-Example of a valid action:
+Example of a valid actions:
 ```
 action = (0, [0.1, 0.4])
 action = (1, [0.0, 0.2])
@@ -63,9 +63,7 @@ Action with only the parameter related to the action id (convenient for algorith
 of the chosen action, since it doesn't require to pad the action): 
 ```
 action = (0, [value_rotation])
-or
 action = (1, [value_acceleration])
-or
 action = (2, [])
 ```
 Example of valid actions:
