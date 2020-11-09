@@ -10,8 +10,8 @@ gym.logger.set_level(40)
 Target = namedtuple('Target', ['x', 'y', 'radius'])
 
 # Action Id
-TURN = 0
-ACCELERATE = 1
+TURN = 1
+ACCELERATE = 0
 BREAK = 2
 
 
@@ -56,19 +56,19 @@ class Action:
             return self.parameters[0]
 
 
-class MovingEnv(gym.Env):
+class MovingEnv(gym.Env, ):
     def __init__(self, seed=None):
         # Agent Parameters
         self.max_turn = 1.0
-        self.max_acceleration = 0.5
+        self.max_acceleration = 1.0
         self.break_value = 0.1
 
         # Environment Parameters
-        self.delta_t = 0.1
+        self.delta_t = 0.05
         self.max_step = 200
         self.field_size = 1.0
         self.target_radius = 0.1
-        self.penalty = 0.05
+        self.penalty = 0.001
 
         # Initialization
         self.current_step = None
@@ -76,8 +76,8 @@ class MovingEnv(gym.Env):
         self.agent = Agent(self.break_value)
         self.seed(seed)
 
-        parameters_min = np.array([-self.max_turn, 0])
-        parameters_max = np.array([+self.max_turn, self.max_acceleration])
+        parameters_min = np.array([0, -1])
+        parameters_max = np.array([1, 1])
 
         self.action_space = spaces.Tuple((spaces.Discrete(3),
                                           spaces.Box(parameters_min, parameters_max)))
@@ -107,10 +107,10 @@ class MovingEnv(gym.Env):
         self.current_step += 1
 
         if action.id == TURN:
-            rotation = max(min(action.parameter, self.max_turn), -self.max_turn)
+            rotation = self.max_turn * max(min(action.parameter, 1), -1)
             self.agent.turn(rotation)
         elif action.id == ACCELERATE:
-            acceleration = max(min(action.parameter, self.max_acceleration), 0)
+            acceleration = self.max_acceleration * max(min(action.parameter, 1), 0)
             self.agent.accelerate(acceleration)
         elif action.id == BREAK:
             self.agent.break_()
@@ -145,7 +145,7 @@ class MovingEnv(gym.Env):
         return state
 
     def get_reward(self, last_distance: float, goal: bool = False) -> float:
-        return self.distance - last_distance - self.penalty + (1 if goal else 0)
+        return last_distance - self.distance - self.penalty + (1 if goal else 0)
 
     @property
     def distance(self) -> float:
