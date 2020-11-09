@@ -75,10 +75,6 @@ action = (1, [0.2])
 action = (2, [])
 ```
 
-### Requirements
-gym
-numpy
-
 ### Disclaimer 
 Even though the mechanics of the environment are done, maybe the hyperparameter will need some further adjustments.
 
@@ -87,6 +83,40 @@ This environment is described in several papers such as:
 [[Parametrized Deep Q-Networks Learning]](https://arxiv.org/pdf/1810.06394.pdf)  
 [[Hybrid Actor-Critic Reinforcement Learning in Parameterized Action Space]](https://arxiv.org/pdf/1903.01344.pdf)  
 *The figure comes from the second reference.
+
+## Requirements
+gym  
+numpy
+
+## Installation
+
+<details open>
+    <summary>Using PIP and github url</summary>
+    Direct Installation from github:
+    ```
+    pip install git+https://github.com/thomashirtz/gym-hybrid#egg=gym-hybrid
+    ```  
+</details>
+
+<details>
+    <summary>Downloading and using pip</summary>
+    Download the repository and run the command:
+    ```
+    python -m pip install -e place-where-the-file-is-located\gym-hybrid
+    ```  
+</details>
+
+<details>
+    <summary>Using git clone and pip</summary>
+    Run the git command:
+    ```
+    git clone https://github.com/thomashirtz/gym-hybrid
+    ```
+    Then, from the cloned repository:
+    ```
+    pip install .
+    ```
+</details>
 
 
 
