@@ -91,6 +91,7 @@ numpy
 <details open>
     <summary>Using PIP and github url</summary>
     Direct Installation from github:
+    
     ```
     pip install git+https://github.com/thomashirtz/gym-hybrid#egg=gym-hybrid
     ```  
@@ -99,6 +100,7 @@ numpy
 <details>
     <summary>Downloading and using pip</summary>
     Download the repository and run the command:
+    
     ```
     python -m pip install -e place-where-the-file-is-located\gym-hybrid
     ```  
@@ -107,10 +109,12 @@ numpy
 <details>
     <summary>Using git clone and pip</summary>
     Run the git command:
+    
     ```
     git clone https://github.com/thomashirtz/gym-hybrid
     ```
     Then, from the cloned repository:
+    
     ```
     pip install .
     ```
