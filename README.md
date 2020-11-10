@@ -35,22 +35,22 @@ while not done:
 ```
 
 
-### Action
+### Actions
 
-The action ids are: 
+**The action ids are:**
 1. Turn
 2. Accelerate
 3. Break
 
-The parameters are:
+**The parameters are:**
 1. Acceleration value
 2. Rotation value
 
-**There is two distinct way to generate an action:**
+**There is two distinct way to format an action:**
 
 Action with all the parameters (convenient if the model output all the parameters): 
 ```
-action = (action_id, [value_rotation, value_acceleration])
+action = (action_id, [rotation_value, acceleration_value])
 ```
 Example of a valid actions:
 ```
@@ -62,8 +62,8 @@ action = (2, [0.1, 0.3])
 Action with only the parameter related to the action id (convenient for algorithms that output only the parameter
 of the chosen action, since it doesn't require to pad the action): 
 ```
-action = (0, [value_rotation])
-action = (1, [value_acceleration])
+action = (0, [rotation_value])
+action = (1, [acceleration_value])
 action = (2, [])
 ```
 Example of valid actions:
@@ -88,33 +88,9 @@ numpy
 
 ## Installation
 
-<details open>
-    <summary>Using PIP and github url</summary>
-    Direct Installation from github:
-    ```
-    pip install git+https://github.com/thomashirtz/gym-hybrid#egg=gym-hybrid
-    ```  
-</details>
-
-<details>
-    <summary>Downloading and using pip</summary>
-    Download the repository and run the command:
-    ```
-    python -m pip install -e place-where-the-file-is-located\gym-hybrid
-    ```  
-</details>
-
-<details>
-    <summary>Using git clone and pip</summary>
-    Run the git command:
-    ```
-    git clone https://github.com/thomashirtz/gym-hybrid
-    ```
-    Then, from the cloned repository:
-    ```
-    pip install .
-    ```
-</details>
-
+Direct Installation from github using pip by running this command:
+```
+pip install git+https://github.com/thomashirtz/gym-hybrid#egg=gym-hybrid
+```  
 
 
