@@ -4,7 +4,7 @@ Repository containing a collection of environment for reinforcement learning tas
 
 ## "Moving-v0" 
 
-<img align="right" width="250"  src="moving-v0.jpg"> 
+<img align="right" width="250"  src="moving_v0.gif"> 
 
 "Moving-v0" is a sandbox environment for parameterized action-space algorithms. The goal of the agent is to stop inside a target area.The field is a square
 with side length 2 and the target area is a circle with radius 0.1. There is three discrete actions: turn, accelerate, and break; as well as 2 possible parameters: acceleration and rotation. The state is constituted of a list of 10 elements, including the speed, the position, the direction, the position of the target, etc.  

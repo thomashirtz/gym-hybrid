@@ -59,29 +59,32 @@ class Action:
 class MovingEnv(gym.Env, ):
     def __init__(self, seed=None):
         # Agent Parameters
-        self.max_turn = 1.0
-        self.max_acceleration = 1.0
+        self.max_turn = np.pi
+        self.max_acceleration = 0.5
         self.break_value = 0.1
 
         # Environment Parameters
-        self.delta_t = 0.05
+        self.delta_t = 0.01
         self.max_step = 200
         self.field_size = 1.0
         self.target_radius = 0.1
         self.penalty = 0.001
 
         # Initialization
-        self.current_step = None
-        self.target = None
-        self.agent = Agent(self.break_value)
         self.seed(seed)
+        self.target = None
+        self.viewer = None
+        self.current_step = None
+        self.agent = Agent(self.break_value)
 
         parameters_min = np.array([0, -1])
-        parameters_max = np.array([1, 1])
+        parameters_max = np.array([1, +1])
 
         self.action_space = spaces.Tuple((spaces.Discrete(3),
                                           spaces.Box(parameters_min, parameters_max)))
         self.observation_space = spaces.Box(np.ones(10), -np.ones(10))
+
+
 
     def seed(self, seed=None):
         self.np_random, seed = seeding.np_random(seed)
@@ -154,3 +157,44 @@ class MovingEnv(gym.Env, ):
     @staticmethod
     def get_distance(x1: float, y1: float, x2: float, y2: float) -> float:
         return np.sqrt(((x1 - x2) ** 2) + ((y1 - y2) ** 2))
+
+    def render(self, mode='human'):
+        screen_width = 400
+        screen_height = 400
+        unit_x = screen_width / 2
+        unit_y = screen_height / 2
+        agentradius = 0.05
+
+        if self.viewer is None:
+            from gym.envs.classic_control import rendering
+            self.viewer = rendering.Viewer(screen_width, screen_height)
+
+            agent = rendering.make_circle(unit_x * agentradius)
+            self.agenttrans = rendering.Transform(translation=(unit_x * (1 + self.agent.x), unit_y * (1 + self.agent.y)))
+            agent.add_attr(self.agenttrans)
+            agent.set_color(0.1, 0.3, 0.9)
+            self.viewer.add_geom(agent)
+
+            arrow = rendering.Line((0, 0), (unit_x * agentradius * 2, 0))
+            arrow.linewidth = 200
+            self.arrowtrans = rendering.Transform(rotation=self.agent.theta)
+            arrow.add_attr(self.arrowtrans)
+            arrow.add_attr(self.agenttrans)
+            arrow.set_color(0, 0, 0)
+            self.viewer.add_geom(arrow)
+
+            target = rendering.make_circle(unit_x * self.target_radius)
+            targettrans = rendering.Transform(translation=(unit_x * (1 + self.target.x), unit_y * (1 + self.target.y)))
+            target.add_attr(targettrans)
+            target.set_color(1, 0.5, 0.5)
+            self.viewer.add_geom(target)
+
+        self.arrowtrans.set_rotation(self.agent.theta)
+        self.agenttrans.set_translation(unit_x * (1 + self.agent.x), unit_y * (1 + self.agent.y))
+
+        return self.viewer.render(return_rgb_array=mode == 'rgb_array')
+
+    def close(self):
+        if self.viewer:
+            self.viewer.close()
+            self.viewer = None
