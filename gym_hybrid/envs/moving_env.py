@@ -59,12 +59,12 @@ class Action:
 class MovingEnv(gym.Env, ):
     def __init__(self, seed=None):
         # Agent Parameters
-        self.max_turn = np.pi
+        self.max_turn = np.pi/2
         self.max_acceleration = 0.5
         self.break_value = 0.1
 
         # Environment Parameters
-        self.delta_t = 0.01
+        self.delta_t = 0.005
         self.max_step = 200
         self.field_size = 1.0
         self.target_radius = 0.1
@@ -83,8 +83,6 @@ class MovingEnv(gym.Env, ):
         self.action_space = spaces.Tuple((spaces.Discrete(3),
                                           spaces.Box(parameters_min, parameters_max)))
         self.observation_space = spaces.Box(np.ones(10), -np.ones(10))
-
-
 
     def seed(self, seed=None):
         self.np_random, seed = seeding.np_random(seed)
@@ -175,8 +173,8 @@ class MovingEnv(gym.Env, ):
             agent.set_color(0.1, 0.3, 0.9)
             self.viewer.add_geom(agent)
 
-            arrow = rendering.Line((0, 0), (unit_x * agentradius * 2, 0))
-            arrow.linewidth = 200
+            t, r, m = 0.1 * unit_x, 0.04 * unit_y, 0.06 * unit_x
+            arrow = rendering.FilledPolygon([(t, 0), (m, r), (m, -r)])
             self.arrowtrans = rendering.Transform(rotation=self.agent.theta)
             arrow.add_attr(self.arrowtrans)
             arrow.add_attr(self.agenttrans)
