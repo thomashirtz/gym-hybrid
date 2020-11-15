@@ -38,8 +38,8 @@ while not done:
 ### Actions
 
 **The action ids are:**
-1. Turn
-2. Accelerate
+1. Accelerate
+2. Turn
 3. Break
 
 **The parameters are:**
@@ -50,7 +50,7 @@ while not done:
 
 Action with all the parameters (convenient if the model output all the parameters): 
 ```
-action = (action_id, [rotation_value, acceleration_value])
+action = (action_id, [acceleration_value, rotation_value])
 ```
 Example of a valid actions:
 ```
@@ -58,12 +58,13 @@ action = (0, [0.1, 0.4])
 action = (1, [0.0, 0.2])
 action = (2, [0.1, 0.3])
 ```
+Note: Only the parameter related to the action chosen will be used.
 
 Action with only the parameter related to the action id (convenient for algorithms that output only the parameter
 of the chosen action, since it doesn't require to pad the action): 
 ```
-action = (0, [rotation_value])
-action = (1, [acceleration_value])
+action = (0, [acceleration_value])
+action = (1, [rotation_value])
 action = (2, [])
 ```
 Example of valid actions:
@@ -72,15 +73,18 @@ action = (0, [0.1])
 action = (1, [0.2])
 action = (2, [])
 ```
+### Render & Recording
+Two testing files are avalaible to show users how to render and record the environment:
+* [Python file example for recording](tests/moving_record.py)
+* [Python file example for rendering](tests/moving_render.py)
 
 ### Disclaimer 
 Even though the mechanics of the environment are done, maybe the hyperparameter will need some further adjustments.
 
 ### Reference
 This environment is described in several papers such as:  
-[[Parametrized Deep Q-Networks Learning]](https://arxiv.org/pdf/1810.06394.pdf)  
-[[Hybrid Actor-Critic Reinforcement Learning in Parameterized Action Space]](https://arxiv.org/pdf/1903.01344.pdf)  
-*The figure comes from the second reference.
+[Parametrized Deep Q-Networks Learning, Xiong et al., 2018](https://arxiv.org/pdf/1810.06394.pdf)  
+[Hybrid Actor-Critic Reinforcement Learning in Parameterized Action Space, Fan et al., 2019](https://arxiv.org/pdf/1903.01344.pdf)  
 
 ## Requirements
 gym  
