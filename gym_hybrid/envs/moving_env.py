@@ -10,8 +10,8 @@ gym.logger.set_level(40)
 Target = namedtuple('Target', ['x', 'y', 'radius'])
 
 # Action Id
-TURN = 1
 ACCELERATE = 0
+TURN = 1
 BREAK = 2
 
 
@@ -57,18 +57,18 @@ class Action:
 
 
 class MovingEnv(gym.Env, ):
-    def __init__(self, seed=None):
+    def __init__(self, seed=None, max_turn=np.pi/2, max_acceleration=0.5, delta_t=0.005, max_step=200, penalty=0.001):
         # Agent Parameters
-        self.max_turn = np.pi/2
-        self.max_acceleration = 0.5
+        self.max_turn = max_turn
+        self.max_acceleration = max_acceleration
         self.break_value = 0.1
 
         # Environment Parameters
-        self.delta_t = 0.005
-        self.max_step = 200
+        self.delta_t = delta_t
+        self.max_step = max_step
         self.field_size = 1.0
         self.target_radius = 0.1
-        self.penalty = 0.001
+        self.penalty = penalty
 
         # Initialization
         self.seed(seed)
