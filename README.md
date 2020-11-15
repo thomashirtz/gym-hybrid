@@ -77,6 +77,15 @@ while not done:
     state, reward, done, info = env.step(env.action_space.sample())
     print(f'State: {state} Reward: {reward} Done: {done}')
 ```
+### Parameters
+The parameter that can be modified during the initialization are:
+* `seed` (default = None)
+* `max_turn`, angle in radi that can be achieved in one step (default = numpy.pi/2)
+* `max_acceleration`, acceleration that can be achieved in one step (if the input parameter is 1) (default = 0.5)
+* `delta_t`, time step of one step (default = 0.005)
+* `max_step`, limit of the number of step before the end of an environment (default = 200)
+* `penalty`, value substracted to the reward each step to incentivise the agent to finish the environment quicker (default = 0.001)
+
 
 ### Render & Recording
 Two testing files are avalaible to show users how to render and record the environment:
