@@ -80,12 +80,16 @@ while not done:
 ### Parameters
 The parameter that can be modified during the initialization are:
 * `seed` (default = None)
-* `max_turn`, angle in radi that can be achieved in one step (default = numpy.pi/2)
+* `max_turn`, angle in radi that can be achieved in one step (default = np.pi/2)
 * `max_acceleration`, acceleration that can be achieved in one step (if the input parameter is 1) (default = 0.5)
 * `delta_t`, time step of one step (default = 0.005)
 * `max_step`, limit of the number of step before the end of an environment (default = 200)
 * `penalty`, value substracted to the reward each step to incentivise the agent to finish the environment quicker (default = 0.001)
 
+Initialization with custom parameters:
+```
+env = gym.make('Moving-v0', seed=0, max_turn=np.pi/4, max_acceleration=1.0, delta_t=0.001, max_step=500, penalty=0.01)
+```
 
 ### Render & Recording
 Two testing files are avalaible to show users how to render and record the environment:
