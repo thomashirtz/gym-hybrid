@@ -30,11 +30,11 @@ The reward is the distance of the agent from the target of the last step minus t
 **There is two distinct way to format an action:**
 
 Action with all the parameters (convenient if the model output all the parameters): 
-```
+```python
 action = (action_id, [acceleration_value, rotation_value])
 ```
 Example of a valid actions:
-```
+```python
 action = (0, [0.1, 0.4])
 action = (1, [0.0, 0.2])
 action = (2, [0.1, 0.3])
@@ -43,20 +43,20 @@ Note: Only the parameter related to the action chosen will be used.
 
 Action with only the parameter related to the action id (convenient for algorithms that output only the parameter
 of the chosen action, since it doesn't require to pad the action): 
-```
+```python
 action = (0, [acceleration_value])
 action = (1, [rotation_value])
 action = (2, [])
 ```
 Example of valid actions:
-```
+```python
 action = (0, [0.1])
 action = (1, [0.2])
 action = (2, [])
 ```
 ### Basics
 Make and initialize an environment:
-```
+```python
 import gym
 import gym_parametrized
 env = gym.make('Moving-v0')
@@ -64,14 +64,14 @@ env.reset()
 ```
 
 Get the action space and the observation space:
-```
+```python
 ACTION_SPACE = env.action_space[0].n
 PARAMETERS_SPACE = env.action_space[1].shape[0]
 OBSERVATION_SPACE = env.observation_space.shape[0]
 ```
 
 Run a random agent:
-```
+```python
 done = False
 while not done:
     state, reward, done, info = env.step(env.action_space.sample())
@@ -87,7 +87,7 @@ The parameter that can be modified during the initialization are:
 * `penalty`, value substracted to the reward each step to incentivise the agent to finish the environment quicker (default = 0.001)
 
 Initialization with custom parameters:
-```
+```python
 env = gym.make('Moving-v0', seed=0, max_turn=np.pi/4, max_acceleration=1.0, delta_t=0.001, max_step=500, penalty=0.01)
 ```
 
@@ -114,7 +114,7 @@ numpy
 ## Installation
 
 Direct Installation from github using pip by running this command:
-```
+```shell
 pip install git+https://github.com/thomashirtz/gym-hybrid#egg=gym-hybrid
 ```  
 
