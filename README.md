@@ -104,8 +104,9 @@ This environment is described in several papers such as:
 [Parametrized Deep Q-Networks Learning, Xiong et al., 2018](https://arxiv.org/pdf/1810.06394.pdf)  
 [Hybrid Actor-Critic Reinforcement Learning in Parameterized Action Space, Fan et al., 2019](https://arxiv.org/pdf/1903.01344.pdf)  
 
-## "Slide-v0" 
-Under development (Variation of the Moving-v0 with conservation of energy)
+## "Sliding-v0" 
+All the explanation given in Moving-v0 apply for Sliding except that when the agent accelerate, there is conservation of the previous speed. 
+Sliding-v0 is much more realistic than Moving-v0.
 
 ## Requirements
 gym  
