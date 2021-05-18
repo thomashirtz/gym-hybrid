@@ -5,9 +5,12 @@ from collections import namedtuple
 import gym
 from gym import spaces
 from gym.utils import seeding
-gym.logger.set_level(40)
+gym.logger.set_level(40)  # noqa
 
-Target = namedtuple('Target', ['x', 'y', 'radius'])
+from gym_hybrid.agents import BaseAgent
+from gym_hybrid.agents import MovingAgent
+from gym_hybrid.agents import SlidingAgent
+
 
 # Action Id
 ACCELERATE = 0
@@ -15,32 +18,7 @@ TURN = 1
 BREAK = 2
 
 
-class Agent:
-    def __init__(self, break_value: float = 0.1):
-        self.x = None
-        self.y = None
-        self.theta = None
-        self.speed = None
-        self.break_value = break_value
-
-    def accelerate(self, value: float) -> None:
-        self.speed += value
-
-    def break_(self) -> None:
-        self.speed = 0 if self.speed < self.break_value else self.speed - self.break_value
-
-    def turn(self, value: float) -> None:
-        self.theta = (self.theta + value) % (2 * np.pi)
-
-    def step(self, delta_t: float = 0.1) -> None:
-        self.x += delta_t * self.speed * np.cos(self.theta)
-        self.y += delta_t * self.speed * np.sin(self.theta)
-
-    def reset(self, x: float, y: float, direction: float) -> None:
-        self.x = x
-        self.y = y
-        self.speed = 0
-        self.theta = direction
+Target = namedtuple('Target', ['x', 'y', 'radius'])
 
 
 class Action:
@@ -56,12 +34,13 @@ class Action:
             return self.parameters[0]
 
 
-class MovingEnv(gym.Env, ):
-    def __init__(self, seed=None, max_turn=np.pi/2, max_acceleration=0.5, delta_t=0.005, max_step=200, penalty=0.001):
+class BaseEnv(gym.Env, ):
+    def __init__(self, seed=None, max_turn=np.pi/2, max_acceleration=0.5, delta_t=0.005, max_step=200, penalty=0.001,
+                 break_value=0.1):
         # Agent Parameters
         self.max_turn = max_turn
         self.max_acceleration = max_acceleration
-        self.break_value = 0.1
+        self.break_value = break_value
 
         # Environment Parameters
         self.delta_t = delta_t
@@ -75,7 +54,7 @@ class MovingEnv(gym.Env, ):
         self.target = None
         self.viewer = None
         self.current_step = None
-        self.agent = Agent(self.break_value)
+        self.agent = BaseAgent(break_value=break_value, delta_t=delta_t)
 
         parameters_min = np.array([0, -1])
         parameters_max = np.array([1, +1])
@@ -84,8 +63,8 @@ class MovingEnv(gym.Env, ):
                                           spaces.Box(parameters_min, parameters_max)))
         self.observation_space = spaces.Box(np.ones(10), -np.ones(10))
 
-    def seed(self, seed=None):
-        self.np_random, seed = seeding.np_random(seed)
+    def seed(self, seed=None) -> list:
+        self.np_random, seed = seeding.np_random(seed)  # noqa
         return [seed]
 
     def reset(self) -> list:
@@ -115,8 +94,6 @@ class MovingEnv(gym.Env, ):
             self.agent.accelerate(acceleration)
         elif action.id == BREAK:
             self.agent.break_()
-
-        self.agent.step(self.delta_t)
 
         if self.distance < self.target_radius and self.agent.speed == 0:
             reward = self.get_reward(last_distance, True)
@@ -161,34 +138,34 @@ class MovingEnv(gym.Env, ):
         screen_height = 400
         unit_x = screen_width / 2
         unit_y = screen_height / 2
-        agentradius = 0.05
+        agent_radius = 0.05
 
         if self.viewer is None:
             from gym.envs.classic_control import rendering
             self.viewer = rendering.Viewer(screen_width, screen_height)
 
-            agent = rendering.make_circle(unit_x * agentradius)
-            self.agenttrans = rendering.Transform(translation=(unit_x * (1 + self.agent.x), unit_y * (1 + self.agent.y)))
-            agent.add_attr(self.agenttrans)
+            agent = rendering.make_circle(unit_x * agent_radius)
+            self.agent_trans = rendering.Transform(translation=(unit_x * (1 + self.agent.x), unit_y * (1 + self.agent.y)))  # noqa
+            agent.add_attr(self.agent_trans)
             agent.set_color(0.1, 0.3, 0.9)
             self.viewer.add_geom(agent)
 
             t, r, m = 0.1 * unit_x, 0.04 * unit_y, 0.06 * unit_x
             arrow = rendering.FilledPolygon([(t, 0), (m, r), (m, -r)])
-            self.arrowtrans = rendering.Transform(rotation=self.agent.theta)
-            arrow.add_attr(self.arrowtrans)
-            arrow.add_attr(self.agenttrans)
+            self.arrow_trans = rendering.Transform(rotation=self.agent.theta)  # noqa
+            arrow.add_attr(self.arrow_trans)
+            arrow.add_attr(self.agent_trans)
             arrow.set_color(0, 0, 0)
             self.viewer.add_geom(arrow)
 
             target = rendering.make_circle(unit_x * self.target_radius)
-            targettrans = rendering.Transform(translation=(unit_x * (1 + self.target.x), unit_y * (1 + self.target.y)))
-            target.add_attr(targettrans)
+            target_trans = rendering.Transform(translation=(unit_x * (1 + self.target.x), unit_y * (1 + self.target.y)))
+            target.add_attr(target_trans)
             target.set_color(1, 0.5, 0.5)
             self.viewer.add_geom(target)
 
-        self.arrowtrans.set_rotation(self.agent.theta)
-        self.agenttrans.set_translation(unit_x * (1 + self.agent.x), unit_y * (1 + self.agent.y))
+        self.arrow_trans.set_rotation(self.agent.theta)
+        self.agent_trans.set_translation(unit_x * (1 + self.agent.x), unit_y * (1 + self.agent.y))
 
         return self.viewer.render(return_rgb_array=mode == 'rgb_array')
 
@@ -196,3 +173,31 @@ class MovingEnv(gym.Env, ):
         if self.viewer:
             self.viewer.close()
             self.viewer = None
+
+
+class MovingEnv(BaseEnv):
+    def __init__(self,
+                 seed: int = None,
+                 max_turn: float = np.pi/2,
+                 max_acceleration: float = 0.5,
+                 delta_t: float = 0.005,
+                 max_step: int = 200,
+                 penalty: float = 0.001,
+                 break_value: float = 0.1):
+        super(MovingEnv, self).__init__(seed=seed, max_turn=max_turn, max_acceleration=max_acceleration,
+                                        delta_t=delta_t, max_step=max_step, penalty=penalty, break_value=break_value)
+        self.agent = MovingAgent(break_value=break_value, delta_t=delta_t)
+
+
+class SlidingEnv(BaseEnv):
+    def __init__(self,
+                 seed: int = None,
+                 max_turn: float = np.pi/2,
+                 max_acceleration: float = 0.5,
+                 delta_t: float = 0.005,
+                 max_step: int = 200,
+                 penalty: float = 0.001,
+                 break_value: float = 0.1):
+        super(SlidingEnv, self).__init__(seed=seed, max_turn=max_turn, max_acceleration=max_acceleration,
+                                         delta_t=delta_t, max_step=max_step, penalty=penalty, break_value=break_value)
+        self.agent = SlidingAgent(break_value=break_value, delta_t=delta_t)
