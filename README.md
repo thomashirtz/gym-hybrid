@@ -102,17 +102,23 @@ Two testing files are avalaible to show users how to render and record the envir
 * [Python file example for recording](tests/moving_record.py)
 * [Python file example for rendering](tests/moving_render.py)
 
-### Disclaimer 
-Even though the mechanics of the environment are done, maybe the hyperparameter will need some further adjustments.
-
-### Reference
-This environment is described in several papers such as:  
-[Parametrized Deep Q-Networks Learning, Xiong et al., 2018](https://arxiv.org/pdf/1810.06394.pdf)  
-[Hybrid Actor-Critic Reinforcement Learning in Parameterized Action Space, Fan et al., 2019](https://arxiv.org/pdf/1903.01344.pdf)  
-
 ## "Sliding-v0" 
 All the explanation given in Moving-v0 apply for Sliding except that when the agent accelerate, there is conservation of the previous speed. 
 Sliding-v0 is much more realistic than Moving-v0.
+
+## Disclaimer 
+Even though the mechanics of the environment are done, maybe the hyperparameter will need some further adjustments.
+
+## Todos
+* Docstrings
+* Add drag
+* Readme Sliding
+* LaTeX Equations 
+
+## Reference
+This environment is described in several papers such as:  
+[Parametrized Deep Q-Networks Learning, Xiong et al., 2018](https://arxiv.org/pdf/1810.06394.pdf)  
+[Hybrid Actor-Critic Reinforcement Learning in Parameterized Action Space, Fan et al., 2019](https://arxiv.org/pdf/1903.01344.pdf)  
 
 ## Requirements
 gym  
@@ -124,5 +130,3 @@ Direct Installation from github using pip by running this command:
 ```shell
 pip install git+https://github.com/thomashirtz/gym-hybrid#egg=gym-hybrid
 ```  
-
-
