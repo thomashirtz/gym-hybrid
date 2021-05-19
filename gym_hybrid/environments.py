@@ -22,12 +22,28 @@ Target = namedtuple('Target', ['x', 'y', 'radius'])
 
 
 class Action:
+    """"
+    Action class to store and standardize the action for the environment.
+    """
     def __init__(self, id_: int, parameters: list):
+        """"
+        Initialization of an action.
+
+        Args:
+            id_: The id of the selected action.
+            parameters: The parameters of an action.
+        """
         self.id = id_
         self.parameters = parameters
 
     @property
     def parameter(self) -> float:
+        """"
+        Property method to return the parameter related to the action selected.
+
+        Returns:
+            The parameter related to this action_id
+        """
         if len(self.parameters) == 2:
             return self.parameters[self.id]
         else:
