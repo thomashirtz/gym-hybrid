@@ -2,13 +2,18 @@
 
 Repository containing a collection of environment for reinforcement learning task possessing discrete-continuous hybrid action space.
 
-## "Moving-v0" 
+## "Sliding-v0" and "Moving-v0" 
 
 <img align="right" width="300"  src="moving_v0.gif"> 
 
-"Moving-v0" is a sandbox environment for parameterized action-space algorithms. The goal of the agent is to stop inside a target area.  
+"Moving-v0" and "Sliding-v0" are sandbox environments for parameterized action-space algorithms. The goal of the agent is to stop inside a target area.  
 The field is a square with a side length of 2. The target area is a circle with radius 0.1. There is three discrete actions: turn, accelerate, and break. In addition to the action, there is 2 possible complementary parameters: acceleration and rotation. 
 The episode terminates if one of the three condition is filled: the agent stop inside the target area, the agent leaves the field, the step count is higher than the limit (set by default at 200).
+
+The moving environment doesn't take into account the conservation of inertia, while the sliding environment does.  
+Sliding-v0 is therefore more realistic than Moving-v0.
+
+All the parameters, actions, states and rewards are the same between the two environments. Only the underlying physics changes.
 
 ### State
 The state is constituted of a list of 10 elements. The environment related values are: the current step divided by the maximum step, and the position of the target (x and y). The player related values are the position (x and y), the speed, the direction (cosine and sine), the distance related to the target, and an indicator that becomes 1 if the player is inside the target zone.
@@ -59,8 +64,12 @@ Make and initialize an environment:
 ```python
 import gym
 import gym_parametrized
-env = gym.make('Moving-v0')
-env.reset()
+
+sliding_env = gym.make('Sliding-v0')
+sliding_env.reset()
+
+moving_env = gym.make('Moving-v0')
+moving_env.reset()
 ```
 
 Get the action space and the observation space:
@@ -101,10 +110,6 @@ env = gym.make('Moving-v0',
 Two testing files are avalaible to show users how to render and record the environment:
 * [Python file example for recording](tests/moving_record.py)
 * [Python file example for rendering](tests/moving_render.py)
-
-## "Sliding-v0" 
-All the explanation given in Moving-v0 apply for Sliding except that when the agent accelerate, there is conservation of the previous speed. 
-Sliding-v0 is much more realistic than Moving-v0.
 
 ## Disclaimer 
 Even though the mechanics of the environment are done, maybe the hyperparameter will need some further adjustments.
