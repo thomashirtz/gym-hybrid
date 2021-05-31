@@ -97,13 +97,15 @@ The parameter that can be modified during the initialization are:
 
 Initialization with custom parameters:
 ```python
-env = gym.make('Moving-v0', 
-               seed=0, 
-               max_turn=np.pi/4, 
-               max_acceleration=1.0, 
-               delta_t=0.001, 
-               max_step=500, 
-               penalty=0.01)
+env = gym.make(
+    'Moving-v0', 
+    seed=0, 
+    max_turn=1,
+    max_acceleration=1.0, 
+    delta_t=0.001, 
+    max_step=500, 
+    penalty=0.01
+)
 ```
 
 ### Render & Recording
