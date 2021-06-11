@@ -6,20 +6,38 @@ Repository containing a collection of environment for reinforcement learning tas
 
 <img align="right" width="300"  src="moving_v0.gif"> 
 
-"Moving-v0" and "Sliding-v0" are sandbox environments for parameterized action-space algorithms. The goal of the agent is to stop inside a target area.  
-The field is a square with a side length of 2. The target area is a circle with radius 0.1. There is three discrete actions: turn, accelerate, and break. In addition to the action, there is 2 possible complementary parameters: acceleration and rotation. 
-The episode terminates if one of the three condition is filled: the agent stop inside the target area, the agent leaves the field, the step count is higher than the limit (set by default at 200).
+"Moving-v0" and "Sliding-v0" are sandbox environments for parameterized action-space algorithms. The goal of the agent is to stop inside a target area.   
 
-The moving environment doesn't take into account the conservation of inertia, while the sliding environment does.  
-Sliding-v0 is therefore more realistic than Moving-v0.
+The field is a square with a side length of 2. The target area is a circle with radius 0.1. There is three discrete actions: turn, accelerate, and break. In addition to the action, there is 2 possible complementary parameters: acceleration and rotation.  
+
+The episode terminates if one of the three condition is filled:  
+* the agent stop inside the target area, 
+* the agent leaves the field, 
+* the step count is higher than the limit (set by default at 200).
+
+The moving environment doesn't take into account the conservation of inertia, while the sliding environment does. `Sliding-v0` is therefore more realistic than `Moving-v0`.
 
 All the parameters, actions, states and rewards are the same between the two environments. Only the underlying physics changes.
 
 ### State
-The state is constituted of a list of 10 elements. The environment related values are: the current step divided by the maximum step, and the position of the target (x and y). The player related values are the position (x and y), the speed, the direction (cosine and sine), the distance related to the target, and an indicator that becomes 1 if the player is inside the target zone.
+The [state](https://github.com/thomashirtz/gym-hybrid/blob/fee4bf5de2dc1dd0d2a5431498124b2c071a2344/gym_hybrid/environments.py#L126) is constituted of a list of 10 elements. The environment related values are: the current step divided by the maximum step, and the position of the target (x and y). The player related values are the position (x and y), the speed, the direction (cosine and sine), the distance related to the target, and an indicator that becomes 1 if the player is inside the target zone.
+```python
+state = [
+    agent.x,
+    agent.y,
+    agent.speed,
+    np.cos(agent.theta),
+    np.sin(agent.theta),
+    target.x,
+    target.y,
+    distance,
+    0 if distance > target_radius else 1,
+    current_step / max_step
+]
+```
 
 ### Reward
-The reward is the distance of the agent from the target of the last step minus the current distance. There is a penalty (set by default at a low value) to incentivize the learning algorithm to score as quickly as possible. A bonus reward of one is added if the player achieve to stop inside the target area. A malus of one is applied if the step count exceed the limit or if the player leaves the field.
+The [reward](https://github.com/thomashirtz/gym-hybrid/blob/fee4bf5de2dc1dd0d2a5431498124b2c071a2344/gym_hybrid/environments.py#L141) is the distance of the agent from the target of the last step minus the current distance. There is a penalty (set by default at a low value) to incentivize the learning algorithm to score as quickly as possible. A bonus reward of one is added if the player achieve to stop inside the target area. A malus of one is applied if the step count exceed the limit or if the player leaves the field.
 
 ### Actions
 
@@ -114,7 +132,7 @@ Two testing files are avalaible to show users how to render and record the envir
 * [Python file example for rendering](tests/moving_render.py)
 
 ## Disclaimer 
-Even though the mechanics of the environment are done, maybe the hyperparameter will need some further adjustments.
+Even though the mechanics of the environment are done, maybe the hyperparameters will need some further adjustments.
 
 ## Todos
 * Docstrings
