@@ -51,8 +51,16 @@ class Action:
 
 
 class BaseEnv(gym.Env, ):
-    def __init__(self, seed=None, max_turn=np.pi/2, max_acceleration=0.5, delta_t=0.005, max_step=200, penalty=0.001,
-                 break_value=0.1):
+    def __init__(
+            self,
+            seed=None,
+            max_turn=np.pi/2,
+            max_acceleration=0.5,
+            delta_t=0.005,
+            max_step=200,
+            penalty=0.001,
+            break_value=0.1,
+    ):
         # Agent Parameters
         self.max_turn = max_turn
         self.max_acceleration = max_acceleration
@@ -192,28 +200,56 @@ class BaseEnv(gym.Env, ):
 
 
 class MovingEnv(BaseEnv):
-    def __init__(self,
-                 seed: int = None,
-                 max_turn: float = np.pi/2,
-                 max_acceleration: float = 0.5,
-                 delta_t: float = 0.005,
-                 max_step: int = 200,
-                 penalty: float = 0.001,
-                 break_value: float = 0.1):
-        super(MovingEnv, self).__init__(seed=seed, max_turn=max_turn, max_acceleration=max_acceleration,
-                                        delta_t=delta_t, max_step=max_step, penalty=penalty, break_value=break_value)
-        self.agent = MovingAgent(break_value=break_value, delta_t=delta_t)
+    def __init__(
+            self,
+            seed: int = None,
+            max_turn: float = np.pi/2,
+            max_acceleration: float = 0.5,
+            delta_t: float = 0.005,
+            max_step: int = 200,
+            penalty: float = 0.001,
+            break_value: float = 0.1,
+    ):
+
+        super(MovingEnv, self).__init__(
+            seed=seed,
+            max_turn=max_turn,
+            max_acceleration=max_acceleration,
+            delta_t=delta_t,
+            max_step=max_step,
+            penalty=penalty,
+            break_value=break_value,
+        )
+
+        self.agent = MovingAgent(
+            break_value=break_value,
+            delta_t=delta_t,
+        )
 
 
 class SlidingEnv(BaseEnv):
-    def __init__(self,
-                 seed: int = None,
-                 max_turn: float = np.pi/2,
-                 max_acceleration: float = 0.5,
-                 delta_t: float = 0.005,
-                 max_step: int = 200,
-                 penalty: float = 0.001,
-                 break_value: float = 0.1):
-        super(SlidingEnv, self).__init__(seed=seed, max_turn=max_turn, max_acceleration=max_acceleration,
-                                         delta_t=delta_t, max_step=max_step, penalty=penalty, break_value=break_value)
-        self.agent = SlidingAgent(break_value=break_value, delta_t=delta_t)
+    def __init__(
+            self,
+            seed: int = None,
+            max_turn: float = np.pi/2,
+            max_acceleration: float = 0.5,
+            delta_t: float = 0.005,
+            max_step: int = 200,
+            penalty: float = 0.001,
+            break_value: float = 0.1
+    ):
+
+        super(SlidingEnv, self).__init__(
+            seed=seed,
+            max_turn=max_turn,
+            max_acceleration=max_acceleration,
+            delta_t=delta_t,
+            max_step=max_step,
+            penalty=penalty,
+            break_value=break_value
+        )
+
+        self.agent = SlidingAgent(
+            break_value=break_value,
+            delta_t=delta_t
+        )
