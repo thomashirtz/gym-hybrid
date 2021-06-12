@@ -55,6 +55,7 @@ class SlidingAgent(BaseAgent):
         self.phi = 0
 
     def accelerate(self, value: float) -> None:
+        # Adding two polar vectors: https://math.stackexchange.com/a/1365938/849658
         speed = np.sqrt(value**2 + self.speed**2 + 2*value*self.speed*np.cos(value - self.speed))
         angle = self.theta + np.arctan2(value*np.sin(self.phi-self.theta),
                                         self.theta + self.phi*np.cos(self.phi - self.theta))
