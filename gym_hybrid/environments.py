@@ -1,5 +1,6 @@
 import numpy as np
 from typing import Tuple
+from typing import Optional
 from collections import namedtuple
 
 import gym
@@ -50,17 +51,31 @@ class Action:
             return self.parameters[0]
 
 
-class BaseEnv(gym.Env, ):
+class BaseEnv(gym.Env):
+    """"
+    Gym environment parent class.
+    """
     def __init__(
             self,
-            seed=None,
-            max_turn=np.pi/2,
-            max_acceleration=0.5,
-            delta_t=0.005,
-            max_step=200,
-            penalty=0.001,
-            break_value=0.1,
+            seed: Optional[int] = None,
+            max_turn: float = np.pi/2,
+            max_acceleration: float = 0.5,
+            delta_t: float = 0.005,
+            max_step: int = 200,
+            penalty: float = 0.001,
+            break_value: float = 0.1,
     ):
+        """Initialization of the gym environment.
+
+        Args:
+            seed (int): Seed used to get reproducible results.
+            max_turn (float): Maximum turn during one step (in radian).
+            max_acceleration (float): Maximum acceleration during one step.
+            delta_t (float): Time duration of one step.
+            max_step (int): Maximum number of steps in one episode.
+            penalty (float): Score penalty given at the agent every step.
+            break_value (float): Break value when performing break action.
+        """
         # Agent Parameters
         self.max_turn = max_turn
         self.max_acceleration = max_acceleration
@@ -87,7 +102,7 @@ class BaseEnv(gym.Env, ):
                                           spaces.Box(parameters_min, parameters_max)))
         self.observation_space = spaces.Box(np.ones(10), -np.ones(10))
 
-    def seed(self, seed=None) -> list:
+    def seed(self, seed: Optional[int] = None) -> list:
         self.np_random, seed = seeding.np_random(seed)  # noqa
         return [seed]
 
