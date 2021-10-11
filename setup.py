@@ -2,5 +2,6 @@ from setuptools import setup
 
 setup(name='gym_hybrid',
       version='0.0.1',
-      install_requires=['gym', 'numpy']
+      packages=['gym_hybrid'],
+      install_requires=['gym', 'numpy'],
 )
