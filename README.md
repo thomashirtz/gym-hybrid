@@ -134,12 +134,6 @@ Two testing files are avalaible to show users how to render and record the envir
 ## Disclaimer 
 Even though the mechanics of the environment are done, maybe the hyperparameters will need some further adjustments.
 
-## Todos
-* Docstrings
-* Add drag
-* Readme Sliding
-* LaTeX Equations 
-
 ## Reference
 This environment is described in several papers such as:  
 [Parametrized Deep Q-Networks Learning, Xiong et al., 2018](https://arxiv.org/pdf/1810.06394.pdf)  
