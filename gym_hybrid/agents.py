@@ -56,9 +56,11 @@ class SlidingAgent(BaseAgent):
 
     def accelerate(self, value: float) -> None:
         # Adding two polar vectors: https://math.stackexchange.com/a/1365938/849658
-        speed = np.sqrt(value**2 + self.speed**2 + 2*value*self.speed*np.cos(value - self.speed))
-        angle = self.theta + np.arctan2(value*np.sin(self.phi-self.theta),
-                                        self.theta + self.phi*np.cos(self.phi - self.theta))
+        # phi_1, r_1 = self.theta, value  # the direction of the agent and the magnitude induced by the action
+        # phi_2, r_2 = self.phi, self.speed  # the direction of the velocity vector and its magnitude
+        speed = np.sqrt(value**2 + self.speed**2 + 2*value*self.speed*np.cos(self.phi - self.theta))
+        angle = self.theta + np.arctan2(self.speed*np.sin(self.phi-self.theta),
+                                        value + self.speed * np.cos(self.phi - self.theta))
         self.speed = speed
         self.phi = angle
         self._step()
