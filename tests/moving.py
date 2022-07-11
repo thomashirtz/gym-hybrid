@@ -1,6 +1,6 @@
 import gym
 import gym_hybrid
-
+import time
 
 if __name__ == '__main__':
     env = gym.make('Moving-v0')

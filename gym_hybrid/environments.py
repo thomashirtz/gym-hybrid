@@ -26,7 +26,7 @@ class Action:
     """"
     Action class to store and standardize the action for the environment.
     """
-    def __init__(self, id_: int, parameters: list):
+    def __init__(self, id_: int, parameters: np.ndarray):
         """"
         Initialization of an action.
 
@@ -100,13 +100,13 @@ class BaseEnv(gym.Env):
 
         self.action_space = spaces.Tuple((spaces.Discrete(3),
                                           spaces.Box(parameters_min, parameters_max)))
-        self.observation_space = spaces.Box(np.ones(10), -np.ones(10))
+        self.observation_space = spaces.Box(-np.ones(10), np.ones(10))
 
     def seed(self, seed: Optional[int] = None) -> list:
         self.np_random, seed = seeding.np_random(seed)  # noqa
         return [seed]
 
-    def reset(self) -> list:
+    def reset(self) -> np.ndarray:
         self.current_step = 0
 
         limit = self.field_size-self.target_radius
@@ -120,7 +120,7 @@ class BaseEnv(gym.Env):
 
         return self.get_state()
 
-    def step(self, raw_action: Tuple[int, list]) -> Tuple[list, float, bool, dict]:
+    def step(self, raw_action: Tuple[int, np.ndarray]) -> Tuple[np.ndarray, float, bool, dict]:
         action = Action(*raw_action)
         last_distance = self.distance
         self.current_step += 1
@@ -146,7 +146,7 @@ class BaseEnv(gym.Env):
 
         return self.get_state(), reward, done, {}
 
-    def get_state(self) -> list:
+    def get_state(self) -> np.ndarray:
         state = [
             self.agent.x,
             self.agent.y,
@@ -159,7 +159,7 @@ class BaseEnv(gym.Env):
             0 if self.distance > self.target_radius else 1,
             self.current_step / self.max_step
         ]
-        return state
+        return np.array(state, dtype=np.float32)
 
     def get_reward(self, last_distance: float, goal: bool = False) -> float:
         return last_distance - self.distance - self.penalty + (1 if goal else 0)
@@ -170,7 +170,7 @@ class BaseEnv(gym.Env):
 
     @staticmethod
     def get_distance(x1: float, y1: float, x2: float, y2: float) -> float:
-        return np.sqrt(((x1 - x2) ** 2) + ((y1 - y2) ** 2))
+        return np.sqrt(((x1 - x2) ** 2) + ((y1 - y2) ** 2))/(2*np.sqrt(2))
 
     def render(self, mode='human'):
         screen_width = 400
