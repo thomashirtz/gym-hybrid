@@ -45,3 +45,15 @@ def test_accelerate(initial_speed, acceleration_value, resulting_speed):
     agent.accelerate(value=acceleration_value)
     assert agent.speed == resulting_speed
 
+
+@pytest.mark.parametrize(
+    'initial_angle, turn_value, resulting_angle',
+    [(pi, pi, 0), (1, 1, 2), (1, 2 * pi, 1)]
+)
+def test_turn(initial_angle, turn_value, resulting_angle):
+    agent = get_moving_agent(
+        theta=initial_angle,
+        speed=0, break_value=0, delta_t=1, x=0, y=0,
+    )
+    agent.turn(value=turn_value)
+    assert agent.theta == resulting_angle
