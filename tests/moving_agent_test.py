@@ -57,3 +57,17 @@ def test_turn(initial_angle, turn_value, resulting_angle):
     )
     agent.turn(value=turn_value)
     assert agent.theta == resulting_angle
+
+
+@pytest.mark.parametrize(
+    'theta, delta_t, speed, expected_x, expected_y',
+    [(pi, 1, 1, -1, 0), (0, 1, 1, 1, 0)]
+)
+def test_step(theta, delta_t, speed, expected_x, expected_y):
+    agent = get_moving_agent(
+        theta=theta,
+        speed=speed, break_value=0, delta_t=delta_t, x=0, y=0,
+    )
+    agent._step()
+    assert agent.x == pytest.approx(expected_x)
+    assert agent.y == pytest.approx(expected_y)
