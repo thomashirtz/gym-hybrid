@@ -11,7 +11,7 @@ def get_moving_agent(
         speed: float,
         theta: float,
         phi: float,
-) -> MovingAgent:
+) -> SlidingAgent:
     agent = SlidingAgent(break_value=break_value, delta_t=delta_t)
     agent.x = x
     agent.y = y
