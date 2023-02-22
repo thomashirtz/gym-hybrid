@@ -3,7 +3,7 @@ from gym_hybrid.agents import SlidingAgent
 from math import pi
 
 
-def get_moving_agent(
+def get_sliding_agent(
         break_value: float,
         delta_t: float,
         x: float,
