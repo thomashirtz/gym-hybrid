@@ -139,6 +139,17 @@ This environment is described in several papers such as:
 [Parametrized Deep Q-Networks Learning, Xiong et al., 2018](https://arxiv.org/pdf/1810.06394.pdf)  
 [Hybrid Actor-Critic Reinforcement Learning in Parameterized Action Space, Fan et al., 2019](https://arxiv.org/pdf/1903.01344.pdf)  
 
+If you use it, feel free to cite me:
+
+```bibtex
+@misc{gym-hybrid,
+  author = {Thomas Hirtz},
+  title = {gym-hybrid: A Hybrid Action Space Environment for Reinforcement Learning},
+  year = {2022},
+  url = {https://github.com/thomashirtz/gym-hybrid},
+}
+```
+
 ## Installation
 
 Direct Installation from github using pip by running this command:
